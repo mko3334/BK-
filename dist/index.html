@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tree Kids School - Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-CW6mZ08_.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-mNtyPVgG.css">
+  </head>
+  <body>
+    <div id="app">
+      <!-- ログイン画面 -->
+      <section id="login-screen" class="screen active">
+        <div class="login-card">
+          <img src="/logo.png" alt="Tree Kids School" class="login-logo">
+          <h1 class="login-title">ポータルログイン</h1>
+          <p class="login-subtitle">続行するために関係者アカウントで開始してください</p>
+          
+          <div class="demo-buttons">
+            <button class="btn-login btn-admin-login" id="btn-login-admin">
+              <span>🛡️</span> 管理者として開始
+            </button>
+            <button class="btn-login btn-staff-login" id="btn-login-staff">
+              <span>👨‍🏫</span> 現場職員として開始
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ダッシュボード画面 -->
+      <section id="dashboard-screen" class="screen">
+        <aside class="sidebar">
+          <div class="logo-area">
+            <img src="/logo.png" alt="Tree Kids School">
+          </div>
+          <nav class="menu" id="side-menu">
+            <button class="menu-item active" data-app="app1" data-role="admin">
+              <span class="icon">📱</span>
+              <span class="label">アプリ管理</span>
+            </button>
+            <button class="menu-item" data-app="app2" data-role="admin">
+              <span class="icon">👥</span>
+              <span class="label">顧客管理</span>
+            </button>
+            <button class="menu-item" data-app="app3" data-role="staff">
+              <span class="icon">📈</span>
+              <span class="label">予実管理</span>
+            </button>
+            <button class="menu-item" data-app="https://treebuss-8a379.web.app/bae0f26b-0e22-42e7-9a75-e21bfd6a12f2" data-role="staff">
+              <span class="icon">🚌</span>
+              <span class="label">送迎管理</span>
+            </button>
+            <button class="menu-item" data-app="app5" data-role="staff">
+              <span class="icon">📄</span>
+              <span class="label">書類管理</span>
+            </button>
+            <button class="menu-item" data-app="app6" data-role="admin">
+              <span class="icon">💰</span>
+              <span class="label">財務管理</span>
+            </button>
+            <button class="menu-item" data-app="app7" data-role="admin">
+              <span class="icon">👔</span>
+              <span class="label">労務管理</span>
+            </button>
+            <button class="menu-item" data-app="https://kobetu-61dbb.web.app/" data-role="staff">
+              <span class="icon">🌱</span>
+              <span class="label">成長管理</span>
+            </button>
+            <button class="menu-item" data-app="https://treekids-program.netlify.app/" data-role="staff">
+              <span class="icon">🧩</span>
+              <span class="label">プログラム管理</span>
+            </button>
+            <div class="menu-group" data-role="admin">
+              <button class="menu-item" data-app="https://tree-money.netlify.app/">
+                <span class="icon">🎟️</span>
+                <span class="label">ツリーマネー管理</span>
+              </button>
+              <div class="sub-menu">
+                <button class="sub-item" data-app="https://treemoney-bank.netlify.app/">
+                  <span class="icon">🏦</span>
+                  <span class="label">子ども銀行</span>
+                </button>
+              </div>
+            </div>
+            <button class="menu-item" data-app="https://treesougei.web.app/" data-role="staff">
+              <span class="icon">✅</span>
+              <span class="label">タスク管理</span>
+            </button>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div id="role-badge" class="current-role-badge">管理者</div>
+            <button class="btn-logout" id="btn-logout">
+              <span class="icon">🚪</span>
+              <span class="label">ログアウト</span>
+            </button>
+          </div>
+        </aside>
+        
+        <main class="content">
+          <div class="frame-container">
+            <iframe id="app-frame" src="/apps/app1.html" frameborder="0"></iframe>
+            <div class="loading-overlay" id="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </main>
+      </section>
+    </div>
+  </body>
+</html>
