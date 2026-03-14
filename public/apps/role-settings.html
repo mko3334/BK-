@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>現場職員タブ表示設定</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    h2 { margin-top: 0; }
+    .card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      max-width: 600px;
+    }
+    .toggle-group {
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .toggle-group:last-child {
+      border-bottom: none;
+    }
+    
+    /* Toggle switch CSS */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #2da44e; }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    .btn-save {
+      background: #2da44e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+    .btn-save:hover { background: #218838; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>現場職員のタブ表示設定</h2>
+    <p style="color:#64748b; margin-bottom: 24px;">現場職員がログインした際に、左側メニューに表示させる項目を個別にON/OFFできます。</p>
+    
+    <div style="margin-bottom: 24px;">
+      <label for="staff-select" style="font-weight: 600; display: block; margin-bottom: 8px;">設定する職員を選択：</label>
+      <select id="staff-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 16px;">
+        <option value="staff_a">👨‍🏫 職員A</option>
+        <option value="staff_b">👨‍🏫 職員B</option>
+        <option value="staff_c">👨‍🏫 職員C</option>
+      </select>
+    </div>
+
+    <div id="settings-list">
+      <!-- JavaScript will populate toggles here -->
+    </div>
+
+    <button class="btn-save" id="btn-save">設定を保存する</button>
+  </div>
+
+  <div class="toast" id="toast">保存しました</div>
+
+  <script>
+    // 全てのアプリ一覧（すべてのタブから選べるように）
+    const allApps = [
+      { id: 'app1', label: '📱 アプリ管理' },
+      { id: 'app2', label: '👥 顧客管理' },
+      { id: 'app3', label: '📈 予実管理' },
+      { id: 'https://treebuss-8a379.web.app/bae0f26b-0e22-42e7-9a75-e21bfd6a12f2', label: '🚌 送迎管理' },
+      { id: 'app5', label: '📄 書類管理' },
+      { id: 'app6', label: '💰 財務管理' },
+      { id: 'app7', label: '👔 労務管理' },
+      { id: 'https://kobetu-61dbb.web.app/', label: '🌱 成長管理' },
+      { id: 'https://treekids-program.netlify.app/', label: '🧩 プログラム管理' },
+      { id: 'https://tree-money.netlify.app/', label: '🎟️ ツリーマネー管理' },
+      { id: 'https://treemoney-bank.netlify.app/', label: '🏦 子ども銀行' },
+      { id: 'https://treesougei.web.app/', label: '✅ タスク管理' }
+    ];
+
+    const listEl = document.getElementById('settings-list');
+    const btnSave = document.getElementById('btn-save');
+    const toast = document.getElementById('toast');
+    const staffSelect = document.getElementById('staff-select');
+
+    let currentStaffId = staffSelect.value;
+    let settings = {};
+
+    function loadSettings() {
+      const STORAGE_KEY = `octopus_staff_permissions_${currentStaffId}`;
+      settings = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      
+      // まだ一度も保存されていない場合は全部ONにしておくなどの初期値を設定
+      if (Object.keys(settings).length === 0) {
+        allApps.forEach(app => settings[app.id] = true);
+      }
+      renderToggles();
+    }
+
+    staffSelect.addEventListener('change', (e) => {
+      currentStaffId = e.target.value;
+      loadSettings();
+    });
+
+    // 画面にトグルを描画
+    function renderToggles() {
+      listEl.innerHTML = '';
+      allApps.forEach(app => {
+        const div = document.createElement('div');
+        div.className = 'toggle-group';
+        
+        const isChecked = settings[app.id] !== false; // 明示的にfalseでなければtrue扱い
+
+        div.innerHTML = `
+          <span>${app.label}</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-${app.id}" ${isChecked ? 'checked' : ''}>
+            <span class="slider"></span>
+          </label>
+        `;
+        listEl.appendChild(div);
+      });
+    }
+
+    // 初期ロード
+    loadSettings();
+
+    // 保存ボタンの処理
+    btnSave.addEventListener('click', () => {
+      allApps.forEach(app => {
+        const cb = document.getElementById(`toggle-${app.id}`);
+        settings[app.id] = cb.checked;
+      });
+      
+      const STORAGE_KEY = `octopus_staff_permissions_${currentStaffId}`;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+      
+      // ポータル(親画面)に設定が更新されたことを通知してメニューを再描画させる
+      window.parent.postMessage({ type: 'STAFF_PERMISSIONS_UPDATED', payload: settings }, '*');
+      
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  </script>
+</body>
+</html>

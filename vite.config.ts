@@ -19,5 +19,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    minify: false, // Node 24 Build Crashの回避
   }
 });

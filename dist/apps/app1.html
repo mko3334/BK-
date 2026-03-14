@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アプリ管理 - 設定</title>
+    <style>
+        :root {
+            --primary: #2da44e;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            padding: 32px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header { border-bottom: 2px solid var(--border); margin-bottom: 32px; padding-bottom: 16px; }
+        h1 { font-size: 24px; color: var(--primary); }
+        .app-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .app-item:last-child { border: none; }
+        .app-info { flex: 1; }
+        .app-label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
+        .app-id { font-size: 11px; color: #94a3b8; }
+        input {
+            flex: 2;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        .save-all { margin-top: 32px; text-align: right; }
+        .toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #1e293b; color: white; padding: 12px 24px;
+            border-radius: 8px; font-size: 14px; opacity: 0; transition: 0.3s;
+        }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ アプリ・リンク設定</h1>
+            <p style="font-size: 13px; color: #64748b;">各メニューのリンク先URLを編集できます。保存後、ポータルを再読み込みすると反映されます。</p>
+        </header>
+
+        <div id="settings-list">
+            <!-- 動的に生成 -->
+        </div>
+
+        <div class="save-all">
+            <button onclick="saveAll()">すべての設定を保存</button>
+        </div>
+    </div>
+    <div id="toast" class="toast">設定を保存しました</div>
+
+    <script>
+        const STORAGE_KEY = 'octopus_app_links';
+        const defaultLinks = {
+            'https://treebuss-8a379.web.app/bae0f26b-0e22-42e7-9a75-e21bfd6a12f2': 'https://treebuss-8a379.web.app/bae0f26b-0e22-42e7-9a75-e21bfd6a12f2',
+            'https://kobetu-61dbb.web.app/': 'https://kobetu-61dbb.web.app/',
+            'https://treekids-program.netlify.app/': 'https://treekids-program.netlify.app/',
+            'https://tree-money.netlify.app/': 'https://tree-money.netlify.app/',
+            'https://treemoney-bank.netlify.app/': 'https://treemoney-bank.netlify.app/',
+            'https://treesougei.web.app/': 'https://treesougei.web.app/',
+            'app1': 'app1',
+            'app2': 'app2',
+            'app3': 'app3',
+            'app5': 'app5',
+            'app6': 'app6',
+            'app7': 'app7'
+        };
+
+        const labels = {
+            'https://treebuss-8a379.web.app/bae0f26b-0e22-42e7-9a75-e21bfd6a12f2': '送迎管理',
+            'https://kobetu-61dbb.web.app/': '成長管理',
+            'https://treekids-program.netlify.app/': 'プログラム管理',
+            'https://tree-money.netlify.app/': 'ツリーマネー管理',
+            'https://treemoney-bank.netlify.app/': '子ども銀行',
+            'https://treesougei.web.app/': 'タスク管理',
+            'app2': '顧客管理',
+            'app3': '予実管理',
+            'app5': '書類管理',
+            'app6': '財務管理',
+            'app7': '労務管理'
+        };
+
+        function loadSettings() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const current = saved ? JSON.parse(saved) : defaultLinks;
+            const container = document.getElementById('settings-list');
+            
+            Object.keys(defaultLinks).forEach(key => {
+                const div = document.createElement('div');
+                div.className = 'app-item';
+                div.innerHTML = `
+                    <div class="app-info">
+                        <span class="app-label">${labels[key]}</span>
+                        <span class="app-id">${key}</span>
+                    </div>
+                    <input type="text" value="${current[key] || defaultLinks[key]}" data-key="${key}">
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function saveAll() {
+            const settings = {};
+            document.querySelectorAll('input').forEach(input => {
+                const key = input.getAttribute('data-key');
+                settings[key] = input.value;
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+            
+            // トースト通知
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+
+            // 親画面に通知
+            window.parent.postMessage({ type: 'SETTINGS_UPDATED' }, window.location.origin);
+        }
+
+        loadSettings();
+    </script>
+</body>
+</html>

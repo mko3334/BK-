@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>プログラム管理</title>
+    <style>
+        :root { --accent: #2da44e; --bg: #ffffff; --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); --border: #e2e8f0; --text: #1e293b; --text-muted: #64748b; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: var(--text); padding: 24px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: var(--accent); font-size: 28px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+        .section { background: var(--bg); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+        .tag-major { background: #f0fdf4; color: #166534; }
+        .prog-badge { padding: 4px 8px; border-radius: 4px; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span>🧩</span> プログラム管理</h1>
+        <div class="section">
+            <span class="tag tag-major">大項目</span>
+            <div style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">プログラム再現性、質向上</div>
+            <div style="color: var(--text-muted); line-height: 1.6;">教育プログラムの標準化と、指導員ごとの提供品質のばらつきを抑えます。</div>
+            <div style="margin-top: 20px;">
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                    <span class="prog-badge">新着</span>
+                    <span>思考力トレーニング 改訂版</span>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="prog-badge" style="background: #dcfce7; color: #166534;">定番</span>
+                    <span>基礎計算モジュール 1.1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

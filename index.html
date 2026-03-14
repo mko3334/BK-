@@ -23,9 +23,11 @@
             <button class="btn-login btn-admin-login" id="btn-login-admin">
               <span>🛡️</span> 管理者として開始
             </button>
-            <button class="btn-login btn-staff-login" id="btn-login-staff">
-              <span>👨‍🏫</span> 現場職員として開始
-            </button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: -8px;">
+              <button class="btn-login" style="background: #10b981; color: white; padding: 10px; font-size: 14px;" id="btn-login-staff-a">👨‍🏫 職員A</button>
+              <button class="btn-login" style="background: #0ea5e9; color: white; padding: 10px; font-size: 14px;" id="btn-login-staff-b">👨‍🏫 職員B</button>
+              <button class="btn-login" style="background: #8b5cf6; color: white; padding: 10px; font-size: 14px;" id="btn-login-staff-c">👨‍🏫 職員C</button>
+            </div>
           </div>
         </div>
       </section>
@@ -89,6 +91,11 @@
               <span class="icon">✅</span>
               <span class="label">タスク管理</span>
             </button>
+            <div class="menu-divider" style="height: 1px; background: #e2e8f0; margin: 8px 12px;" data-role="admin"></div>
+            <button class="menu-item" data-app="/apps/role-settings.html" data-role="admin">
+              <span class="icon">⚙️</span>
+              <span class="label">ポータル設定</span>
+            </button>
           </nav>
 
           <div class="sidebar-footer">
@@ -101,8 +108,8 @@
         </aside>
         
         <main class="content">
-          <div class="frame-container">
-            <iframe id="app-frame" src="/apps/app1.html" frameborder="0"></iframe>
+          <div class="frame-container" id="frames-wrapper">
+            <!-- Dynamic iframes will be injected here -->
             <div class="loading-overlay" id="loading">
               <div class="spinner"></div>
             </div>
